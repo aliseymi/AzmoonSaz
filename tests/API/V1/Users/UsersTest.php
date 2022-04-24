@@ -37,10 +37,10 @@ class UsersTest extends \TestCase
     public function test_should_update_the_information_of_user()
     {
         $response = $this->call('PUT', 'api/v1/users', [
-            'id' => 1,
-            'full_name' => 'aliseymi',
-            'email' => 'ali@gmail.com',
-            'mobile' => '09121234567'
+            'id' => 938,
+            'full_name' => 'ali',
+            'email' => 'seymi@gmail.com',
+            'mobile' => '09121234568'
         ]);
 
         $this->assertEquals(200, $response->status());
@@ -54,5 +54,12 @@ class UsersTest extends \TestCase
                 'mobile'
             ]
         ]);
+    }
+
+    public function test_it_can_throw_exception_if_we_dont_send_parameters_to_update_info()
+    {
+        $response = $this->call('put', 'api/v1/users', []);
+
+        $this->assertEquals('422', $response->status());
     }
 }
