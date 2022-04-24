@@ -8,6 +8,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
 
         $router->post('', 'UserController@store');
 
+        $router->put('', 'UserController@updateInfo');
+
     });
 
 });

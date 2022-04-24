@@ -22,20 +22,42 @@ class UserController extends APIController
             'password' => 'required|string'
         ]);
 
-        $this->userRepository->create([
+        $this->userRepository->create(
             [
                 'full_name' => $request->full_name,
                 'email' => $request->email,
                 'mobile' => $request->mobile,
                 'password' => app('hash')->make($request->password)
             ]
-        ]);
+        );
 
-        return $this->respondCreated('کاربر با موفقیت ایجاد شد',[
+        return $this->respondCreated('کاربر با موفقیت ایجاد شد', [
             'full_name' => $request->full_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
             'password' => $request->password
+        ]);
+    }
+
+    public function updateInfo(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+            'full_name' => 'required|string|min:3|max:255',
+            'email' => 'required|string|email',
+            'mobile' => 'required|string|digits:11|regex:/^09\d{9}$/',
+        ]);
+
+        $this->userRepository->update($request->id, [
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile
+        ]);
+
+        return $this->respondSuccess('کاربر با موفقیت بروزرسانی شد', [
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile
         ]);
     }
 }

@@ -33,4 +33,26 @@ class UsersTest extends \TestCase
 
         $this->assertEquals('422', $response->status());
     }
+
+    public function test_should_update_the_information_of_user()
+    {
+        $response = $this->call('PUT', 'api/v1/users', [
+            'id' => 1,
+            'full_name' => 'aliseymi',
+            'email' => 'ali@gmail.com',
+            'mobile' => '09121234567'
+        ]);
+
+        $this->assertEquals(200, $response->status());
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data' => [
+                'full_name',
+                'email',
+                'mobile'
+            ]
+        ]);
+    }
 }
