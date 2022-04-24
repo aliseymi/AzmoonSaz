@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Http\Controllers\API\Contracts\APIController;
 use App\Http\Controllers\Controller;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class UserController extends APIController
 {
     public function __construct(private UserRepositoryInterface $userRepository)
     {
@@ -21,17 +22,20 @@ class UserController extends Controller
             'password' => 'required|string'
         ]);
 
-        $this->userRepository->create($request->toArray());
-
-        return response()->json([
-            'success' => true,
-            'message' => 'کاربر با موفقیت ایجاد شد',
-            'data' => [
+        $this->userRepository->create([
+            [
                 'full_name' => $request->full_name,
                 'email' => $request->email,
                 'mobile' => $request->mobile,
-                'password' => $request->password
+                'password' => app('hash')->make($request->password)
             ]
-        ])->setStatusCode(201);
+        ]);
+
+        return $this->respondCreated('کاربر با موفقیت ایجاد شد',[
+            'full_name' => $request->full_name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'password' => $request->password
+        ]);
     }
 }
