@@ -10,6 +10,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
 
         $router->put('', 'UserController@updateInfo');
 
+        $router->put('change-password', 'UserController@updatePassword');
+
     });
 
 });
