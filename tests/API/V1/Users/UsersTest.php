@@ -83,4 +83,26 @@ class UsersTest extends \TestCase
             ]
         ]);
     }
+
+    public function test_it_can_throw_exception_if_we_dont_send_parameters_to_update_password()
+    {
+        $response = $this->call('put', 'api/v1/users/change-password', []);
+
+        $this->assertEquals('422', $response->status());
+    }
+
+    public function test_should_delete_user()
+    {
+        $response = $this->call('delete', 'api/v1/users', [
+            'id' => 938
+        ]);
+
+        $this->assertEquals(200, $response->status());
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
 }

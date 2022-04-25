@@ -37,9 +37,9 @@ class JsonBaseRepository implements RepositoryInterface
         $users = json_decode(file_get_contents('users.json'), true);
 
         foreach ($users as $key => $user) {
-            
+
             if ($user['id'] == $id) {
-                
+
                 $user['full_name'] = $data['full_name'] ?? $user['full_name'];
                 $user['email'] = $data['email'] ?? $user['email'];
                 $user['mobile'] = $data['mobile'] ?? $user['mobile'];
@@ -49,7 +49,7 @@ class JsonBaseRepository implements RepositoryInterface
 
                 array_push($users, $user);
 
-                if(file_exists('users.json')){
+                if (file_exists('users.json')) {
                     unlink('users.json');
                 }
 
@@ -60,8 +60,30 @@ class JsonBaseRepository implements RepositoryInterface
         }
     }
 
-    public function delete(array $where)
+    public function deleteBy(array $where)
     {
+    }
+
+    public function delete(int $id)
+    {
+        $users = json_decode(file_get_contents('users.json'), true);
+
+        foreach ($users as $key => $user) {
+
+            if ($user['id'] == $id) {
+
+                unset($users[$key]);
+
+                if (file_exists('users.json')) {
+
+                    unlink('users.json');
+                }
+
+                file_put_contents('users.json', json_encode($users));
+
+                break;
+            }
+        }
     }
 
     public function find(int $id)
