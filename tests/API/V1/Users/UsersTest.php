@@ -105,4 +105,39 @@ class UsersTest extends \TestCase
             'data'
         ]);
     }
+
+    public function test_should_get_users()
+    {
+        $pagesize = 3;
+
+        $response = $this->call('get', 'api/v1/users', [
+            'page' => 1,
+            'pagesize' => $pagesize
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertCount($pagesize, $data['data']);
+
+        $this->assertEquals(200, $response->status());
+    }
+
+    public function test_Should_get_filtered_user()
+    {
+        $pagesize = 3;
+
+        $userEmail = 'ali@gmail.com';
+
+        $response = $this->call('get', 'api/v1/users', [
+            'search' => 'ali@gmail.com',
+            'page' => 1,
+            'pagesize' => $pagesize
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertEquals($data['data']['email'], $userEmail);
+
+        $this->assertEquals(200, $response->status());
+    }
 }

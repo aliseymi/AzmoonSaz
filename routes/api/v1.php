@@ -14,6 +14,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
 
         $router->delete('', 'UserController@delete');
 
+        $router->get('', 'UserController@index');
+
     });
 
 });
