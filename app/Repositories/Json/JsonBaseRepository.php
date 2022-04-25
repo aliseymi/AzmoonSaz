@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Json;
 
+use App\Entities\User\JsonUserEntity;
+use App\Entities\User\UserEntity;
 use App\Repositories\Contracts\RepositoryInterface;
 
 class JsonBaseRepository implements RepositoryInterface
@@ -86,8 +88,17 @@ class JsonBaseRepository implements RepositoryInterface
         }
     }
 
-    public function find(int $id)
+    public function find(int $id): UserEntity
     {
+        $users = json_decode(file_get_contents(base_path('users.json')), true);
+        
+        foreach($users as $user){
+            if($user['id'] == $id){
+                return new JsonUserEntity($user);
+            }
+        }
+
+        return new JsonUserEntity(null);
     }
 
     public function paginate(string $search = null, int $page, int $pagesize = 10)
