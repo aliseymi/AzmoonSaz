@@ -18,13 +18,23 @@ class EloquentUserEntity implements UserEntity
         return $this->user->id;
     }
 
-    public function getName(): string
+    public function getFullName(): string
     {
-        return $this->user->name;
+        return $this->user->full_name;
     }
 
     public function getEmail(): string
     {
         return $this->user->email;
+    }
+
+    public function getMobile(): string
+    {
+        return $this->user->mobile;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->user->password;
     }
 }

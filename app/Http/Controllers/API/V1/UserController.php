@@ -35,7 +35,7 @@ class UserController extends APIController
             'password' => 'required|string'
         ]);
 
-        $this->userRepository->create(
+        $user = $this->userRepository->create(
             [
                 'full_name' => $request->full_name,
                 'email' => $request->email,
@@ -45,10 +45,10 @@ class UserController extends APIController
         );
 
         return $this->respondCreated('کاربر با موفقیت ایجاد شد', [
-            'full_name' => $request->full_name,
-            'email' => $request->email,
-            'mobile' => $request->mobile,
-            'password' => $request->password
+            'full_name' => $user->getFullName(),
+            'email' => $user->getEmail(),
+            'mobile' => $user->getMobile(),
+            'password' => $user->getPassword()
         ]);
     }
 
