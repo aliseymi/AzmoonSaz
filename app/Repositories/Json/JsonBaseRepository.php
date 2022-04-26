@@ -9,16 +9,18 @@ use App\Repositories\Contracts\RepositoryInterface;
 class JsonBaseRepository implements RepositoryInterface
 {
 
+    protected $userJson;
+
     public function create(array $data)
     {
-        if (file_exists('users.json')) {
-            $users = json_decode(file_get_contents('users.json'), true);
+        if (file_exists($this->userJson)) {
+            $users = json_decode(file_get_contents($this->userJson), true);
 
             $data['id'] = mt_rand(1, 1000);
 
             array_push($users, $data);
 
-            file_put_contents('users.json', json_encode($users));
+            file_put_contents($this->userJson, json_encode($users));
         } else {
             $users = [];
 
@@ -26,8 +28,10 @@ class JsonBaseRepository implements RepositoryInterface
 
             array_push($users, $data);
 
-            file_put_contents('users.json', json_encode($users));
+            file_put_contents($this->userJson, json_encode($users));
         }
+
+        return $data;
     }
 
     public function all(array $where)
