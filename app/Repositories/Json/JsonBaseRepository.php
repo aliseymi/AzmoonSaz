@@ -70,7 +70,7 @@ class JsonBaseRepository implements RepositoryInterface
     {
     }
 
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         $users = json_decode(file_get_contents('users.json'), true);
 
@@ -87,9 +87,11 @@ class JsonBaseRepository implements RepositoryInterface
 
                 file_put_contents('users.json', json_encode($users));
 
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     public function find(int $id): UserEntity
@@ -105,7 +107,7 @@ class JsonBaseRepository implements RepositoryInterface
         return new JsonUserEntity(null);
     }
 
-    public function paginate(string $search = null, int $page, int $pagesize = 10)
+    public function paginate(string $search = null, int $page, int $pagesize = 10): array
     {
         $users = json_decode(file_get_contents('users.json'), true);
 
