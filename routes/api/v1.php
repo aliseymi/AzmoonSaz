@@ -22,6 +22,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
 
         $router->post('', 'CategoryController@store');
 
+        $router->delete('', 'CategoryController@delete');
+
     });
 
 });

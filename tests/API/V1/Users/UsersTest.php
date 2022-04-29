@@ -29,7 +29,9 @@ class UsersTest extends \TestCase
 
         $this->assertEquals(201, $response->status());
 
-        // $this->seeInDatabase('users', $newUser);
+        $newUser['password'] = json_decode($response->getContent(), true)['data']['password'];
+
+        $this->seeInDatabase('users', $newUser);
 
         $this->seeJsonStructure([
             'success',

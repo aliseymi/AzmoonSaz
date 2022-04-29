@@ -30,4 +30,21 @@ class CategoryController extends APIController
             'slug' => $createdCategory->getSlug()
         ]);
     }
+
+    public function delete(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(!$this->categoryRepository->find($request->id)){
+            return $this->respondNotFound('دسته‌بندی وجود ندارد');
+        }
+
+        if(!$this->categoryRepository->delete($request->id)){
+            return $this->respondInternalError('خطایی وجود دارد لطفا مجددا تلاش کنید');
+        }
+
+        return $this->respondSuccess('دسته‌بندی با موفقیت حذف شد');
+    }
 }
