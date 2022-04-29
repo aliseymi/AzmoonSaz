@@ -21,7 +21,7 @@ class UserController extends APIController
             'pagesize' => 'nullable|numeric'
         ]);
 
-        $users = $this->userRepository->paginate($request->search, $request->page, $request->pagesize ?? 10);
+        $users = $this->userRepository->paginate($request->search, $request->page, $request->pagesize ?? 10, ['full_name', 'email', 'mobile']);
 
         return $this->respondSuccess('کاربران', $users);
     }

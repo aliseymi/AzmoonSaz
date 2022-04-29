@@ -81,6 +81,46 @@ class CategoriesTest extends TestCase
         ]);
     }
 
+    public function test_should_get_categories()
+    {
+        $this->createCategories(30);
+
+        $pagesize = 3;
+
+        $response = $this->call('get', 'api/v1/categories', [
+            'page' => 1,
+            'pagesize' => $pagesize
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertCount($pagesize, $data['data']);
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function test_should_get_filtered_categories()
+    {
+        $this->createCategories(30);
+
+        $pagesize = 3;
+
+        $categorySlug = 'new-category';
+
+        $response = $this->call('get', 'api/v1/categories', [
+            'page' => 1,
+            'pagesize' => $pagesize
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        foreach($data['data'] as $category){
+            $this->assertEquals($categorySlug, $category['slug']);
+        }
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     private function createCategories(int $count = 1): array
     {
         $categoryRepository = $this->app->make(CategoryRepositoryInterface::class);
