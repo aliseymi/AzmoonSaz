@@ -47,4 +47,27 @@ class CategoryController extends APIController
 
         return $this->respondSuccess('دسته‌بندی با موفقیت حذف شد');
     }
+
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric',
+            'name' => 'required|string|min:3|max:255',
+            'slug' => 'required|string|min:3|max:255'
+        ]);
+
+        try {
+            $updatedCategory = $this->categoryRepository->update($request->id, [
+                'name' => $request->name,
+                'slug' => $request->slug
+            ]);
+        } catch (\Exception $e) {
+            return $this->respondInternalError('دسته‌بندی بروزرسانی نشد');
+        }
+
+        return $this->respondSuccess('دسته‌بندی با موفقیت بروزرسانی شد', [
+            'name' => $updatedCategory->getName(),
+            'slug' => $updatedCategory->getSlug()
+        ]);
+    }
 }
