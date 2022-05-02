@@ -2,6 +2,7 @@
 
 namespace API\V1\Quizzes;
 
+use App\Repositories\Contracts\QuizRepositoryInterface;
 use Carbon\Carbon;
 use TestCase;
 
@@ -51,6 +52,50 @@ class QuizzesTest extends TestCase
                 'duration'
             ]
         ]);
+    }
+
+    public function test_ensure_that_we_can_delete_a_quiz()
+    {
+        $quiz = $this->createQuiz()[0];
+
+        $response = $this->call('delete', 'api/v1/quizzes', [
+            'id' => $quiz->getId()
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
+
+    private function createQuiz(int $count = 1): array
+    {
+        $category = $this->createCategories()[0];
+
+        $quizRepository = $this->app->make(QuizRepositoryInterface::class);
+
+        $start_date = Carbon::now()->addDay();
+
+        $duration = Carbon::now()->addDay();
+
+        $quizData = [
+            'category_id' => $category->getId(),
+            'title' => 'quiz 1',
+            'description' => 'this is a test quiz',
+            'start_date' => $start_date,
+            'duration' => $duration->addMinutes(60)
+        ];
+
+        $quizzes = [];
+
+        foreach(range(0 ,$count) as $item){
+            $quizzes[] = $quizRepository->create($quizData);
+        }
+
+        return $quizzes;
     }
 }
 

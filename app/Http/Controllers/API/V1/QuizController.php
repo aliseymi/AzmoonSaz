@@ -48,4 +48,21 @@ class QuizController extends APIController
             'duration' => $createdQuiz->getDuration()
         ]);
     }
+
+    public function delete(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(!$this->quizRepository->find($request->id)){
+            return $this->respondNotFound('آزمون یافت نشد');
+        }
+
+        if(!$this->quizRepository->delete($request->id)){
+            return $this->respondInternalError('آزمون حذف نشد');
+        }
+
+        return $this->respondSuccess('آزمون حذف شد');
+    }
 }

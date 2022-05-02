@@ -33,6 +33,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
     $router->group(['prefix' => 'quizzes'], function () use($router){
 
         $router->post('', 'QuizController@store');
+
+        $router->delete('', 'QuizController@delete');
     });
 
 });
