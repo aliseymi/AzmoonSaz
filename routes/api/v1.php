@@ -44,6 +44,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
     $router->group(['prefix' => 'questions'], function () use($router){
 
         $router->post('', 'QuestionController@store');
+
+        $router->delete('', 'QuestionController@delete');
     });
 
 });

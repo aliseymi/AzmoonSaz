@@ -44,4 +44,21 @@ class QuestionController extends APIController
             'quiz_id' => $question->getQuizId()
         ]);
     }
+
+    public function delete(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(!$this->questionRepository->find($request->id)){
+            return $this->respondNotFound('آزمون یافت نشد');
+        }
+
+        if(!$this->questionRepository->delete($request->id)){
+            return $this->respondInternalError('آزمون حذف نشد');
+        }
+
+        return $this->respondSuccess('آزمون حذف شد');
+    }
 }

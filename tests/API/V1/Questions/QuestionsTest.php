@@ -55,4 +55,21 @@ class QuestionsTest extends TestCase
             ]
         ]);
     }
+
+    public function test_ensure_that_we_can_delete_a_question()
+    {
+        $question = $this->createQuestion()[0];
+        
+        $response = $this->call('delete', 'api/v1/questions', [
+            'id' => $question->getId()
+        ]);
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
 }

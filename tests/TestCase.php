@@ -1,9 +1,11 @@
 <?php
 
 use Carbon\Carbon;
+use App\Consts\QuestionStatus;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use App\Repositories\Contracts\QuizRepositoryInterface;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
+use App\Repositories\Contracts\QuestionRepositoryInterface;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -60,5 +62,33 @@ abstract class TestCase extends BaseTestCase
         }
 
         return $quizzes;
+    }
+
+    protected function createQuestion(int $count = 1, array $data = []): array
+    {
+        $quiz = $this->createQuiz()[0];
+
+        $questionRepository = $this->app->make(QuestionRepositoryInterface::class);
+
+        $questionData = empty($data) ? [
+            'title' => 'What is PHP?',
+            'options' => json_encode([
+                1 => ['text' => 'PHP is a car', 'is_correct' => 0],
+                2 => ['text' => 'PHP is a programming language', 'is_correct' => 1],
+                3 => ['text' => 'PHP is an animal', 'is_correct' => 0],
+                4 => ['text' => 'PHP is a toy', 'is_correct' => 0]
+            ]),
+            'is_active' => QuestionStatus::ACTIVE,
+            'score' => 5,
+            'quiz_id' => $quiz->getId()
+        ] : $data;
+
+        $questions = [];
+
+        foreach(range(0 ,$count) as $item){
+            $questions[] = $questionRepository->create($questionData);
+        }
+
+        return $questions;
     }
 }
