@@ -176,33 +176,5 @@ class QuizzesTest extends TestCase
             ]
         ]);
     }
-
-    private function createQuiz(int $count = 1, array $data = []): array
-    {
-        $category = $this->createCategories()[0];
-
-        $quizRepository = $this->app->make(QuizRepositoryInterface::class);
-
-        $start_date = Carbon::now()->addDay();
-
-        $duration = Carbon::now()->addDay();
-
-        $quizData = empty($data) ? [
-            'category_id' => $category->getId(),
-            'title' => 'quiz 1',
-            'description' => 'this is a test quiz',
-            'start_date' => $start_date,
-            'duration' => $duration->addMinutes(60),
-            'is_active' => true
-        ] : $data;
-
-        $quizzes = [];
-
-        foreach(range(0 ,$count) as $item){
-            $quizzes[] = $quizRepository->create($quizData);
-        }
-
-        return $quizzes;
-    }
 }
 
