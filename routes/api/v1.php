@@ -47,6 +47,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
 
         $router->post('', 'QuestionController@store');
 
+        $router->put('', 'QuestionController@update');
+
         $router->delete('', 'QuestionController@delete');
     });
 

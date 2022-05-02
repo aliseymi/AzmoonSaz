@@ -64,6 +64,38 @@ class QuestionController extends APIController
         ]);
     }
 
+    public function update(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric',
+            'title' => 'required|string',
+            'options' => 'required|json',
+            'score' => 'required|numeric',
+            'is_active' => 'required|numeric',
+            'quiz_id' => 'required|numeric'
+        ]);
+
+        if(!$this->questionRepository->find($request->id)){
+            return $this->respondNotFound('سوال یافت نشد');
+        }
+
+        $updatedQuestion = $this->questionRepository->update($request->id, [
+            'title' => $request->title,
+            'options' => $request->options,
+            'score' => $request->score,
+            'is_active' => $request->is_active,
+            'quiz_id' => $request->quiz_id
+        ]);
+
+        return $this->respondSuccess('سوال بروزرسانی شد', [
+            'title' => $updatedQuestion->getTitle(),
+            'options' => json_encode($updatedQuestion->getOptions()),
+            'score' => $updatedQuestion->getScore(),
+            'is_active' => $updatedQuestion->getIsActive(),
+            'quiz_id' => $updatedQuestion->getQuizId()
+        ]);
+    }
+
     public function delete(Request $request)
     {
         $this->validate($request, [
