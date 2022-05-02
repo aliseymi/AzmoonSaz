@@ -43,4 +43,9 @@ class EloquentQuizEntity implements QuizEntity
     {
         return $this->quiz->duration;
     }
+
+    public function getIsActive(): bool
+    {
+        return $this->quiz->is_active;
+    }
 }
