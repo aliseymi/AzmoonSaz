@@ -71,7 +71,69 @@ class QuizzesTest extends TestCase
         ]);
     }
 
-    private function createQuiz(int $count = 1): array
+    public function test_ensure_that_we_can_get_quizzes()
+    {
+        $this->createQuiz(30);
+
+        $pagesize = 3;
+
+        $response = $this->call('get', 'api/v1/quizzes', [
+            'page' => 1,
+            'pagesize' => $pagesize
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertCount($pagesize, $data['data']);
+
+        $this->assertEquals(200, $response->status());
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
+
+    public function test_ensure_that_we_can_get_filtered_quizzes()
+    {
+        $start_date = Carbon::now()->addDay();
+
+        $duration = Carbon::now()->addDay()->addMinutes(30);
+
+        $this->createQuiz(30, [
+            'title' => 'specific quiz',
+            'description' => 'this is a specific quiz',
+            'start_date' => $start_date,
+            'duration' => $duration
+        ]);
+
+        $pagesize = 3;
+
+        $searchKey = 'specific quiz';
+
+        $response = $this->call('get', 'api/v1/quizzes', [
+            'page' => 1,
+            'pagesize' => $pagesize,
+            'search' => $searchKey
+        ]);
+
+        $data = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->status());
+
+        foreach($data['data'] as $quiz){
+            $this->assertEquals($quiz['title'], $searchKey);
+        }
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
+
+    private function createQuiz(int $count = 1, array $data = []): array
     {
         $category = $this->createCategories()[0];
 
@@ -81,13 +143,13 @@ class QuizzesTest extends TestCase
 
         $duration = Carbon::now()->addDay();
 
-        $quizData = [
+        $quizData = empty($data) ? [
             'category_id' => $category->getId(),
             'title' => 'quiz 1',
             'description' => 'this is a test quiz',
             'start_date' => $start_date,
             'duration' => $duration->addMinutes(60)
-        ];
+        ] : $data;
 
         $quizzes = [];
 

@@ -13,6 +13,19 @@ class QuizController extends APIController
     {
     }
 
+    public function index(Request $request)
+    {
+        $this->validate($request, [
+            'search' => 'nullable|string',
+            'page' => 'required|numeric',
+            'pagesize' => 'nullable|numeric'
+        ]);
+
+        $quizzes = $this->quizRepository->paginate($request->search, $request->page, $request->pagesize ?? 10, ['title', 'description', 'start_date', 'duration']);
+
+        return $this->respondSuccess('آزمون ها', $quizzes);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
