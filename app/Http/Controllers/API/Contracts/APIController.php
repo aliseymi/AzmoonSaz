@@ -29,6 +29,20 @@ class APIController extends Controller
         return $this->respond($message, false);
     }
 
+    public function respondForbidden(string $message = '')
+    {
+        $this->setStatusCode(403);
+
+        return $this->respond($message, false);
+    }
+
+    public function respondInvalidValidation(string $message = '')
+    {
+        $this->setStatusCode(422);
+
+        return $this->respond($message, false);
+    }
+
     public function respondInternalError(string $message = '')
     {
         $this->setStatusCode(500);
