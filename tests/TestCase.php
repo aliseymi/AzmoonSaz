@@ -2,10 +2,12 @@
 
 use Carbon\Carbon;
 use App\Consts\QuestionStatus;
+use App\Consts\AnswerSheetsStatus;
 use Laravel\Lumen\Testing\TestCase as BaseTestCase;
 use App\Repositories\Contracts\QuizRepositoryInterface;
 use App\Repositories\Contracts\CategoryRepositoryInterface;
 use App\Repositories\Contracts\QuestionRepositoryInterface;
+use App\Repositories\Contracts\AnswerSheetRepositoryInterface;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -16,17 +18,17 @@ abstract class TestCase extends BaseTestCase
      */
     public function createApplication()
     {
-        return require __DIR__.'/../bootstrap/app.php';
+        return require __DIR__ . '/../bootstrap/app.php';
     }
 
-    
+
     protected function createCategories(int $count = 1): array
     {
         $categoryRepository = $this->app->make(CategoryRepositoryInterface::class);
 
         $categories = [];
 
-        foreach(range(0, $count) as $item){
+        foreach (range(0, $count) as $item) {
             $categories[] = $categoryRepository->create([
                 'name' => 'new category',
                 'slug' => 'new-category'
@@ -57,7 +59,7 @@ abstract class TestCase extends BaseTestCase
 
         $quizzes = [];
 
-        foreach(range(0 ,$count) as $item){
+        foreach (range(0, $count) as $item) {
             $quizzes[] = $quizRepository->create($quizData);
         }
 
@@ -85,10 +87,37 @@ abstract class TestCase extends BaseTestCase
 
         $questions = [];
 
-        foreach(range(0 ,$count) as $item){
+        foreach (range(0, $count) as $item) {
             $questions[] = $questionRepository->create($questionData);
         }
 
         return $questions;
+    }
+
+    protected function createAnswerSheet(int $count = 1, array $data = []): array
+    {
+        $quiz = $this->createQuiz()[0];
+
+        $answerSheetRepository = $this->app->make(AnswerSheetRepositoryInterface::class);
+
+        $answerSheetData = empty($data) ? [
+            'quiz_id' => $quiz->getId(),
+            'answers' => json_encode([
+                1 => 3,
+                2 => 1,
+                3 => 2
+            ]),
+            'status' => AnswerSheetsStatus::PASSED,
+            'score' => 10,
+            'finished_at' => Carbon::now()
+        ] : $data;
+
+        $answerSheets = [];
+
+        foreach (range(0, $count) as $item) {
+            $answerSheets[] = $answerSheetRepository->create($answerSheetData);
+        }
+
+        return $answerSheets;
     }
 }

@@ -55,6 +55,8 @@ $router->group(['prefix' => 'api/v1', 'namespace' => 'API\V1'], function () use 
     $router->group(['prefix' => 'answer-sheets'], function () use($router){
 
         $router->post('', 'AnswerSheetController@store');
+
+        $router->delete('', 'AnswerSheetController@delete');
     });
 
 });

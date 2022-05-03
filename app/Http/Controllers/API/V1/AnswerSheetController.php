@@ -44,4 +44,21 @@ class AnswerSheetController extends APIController
             'finished_at' => $createdAnswerSheet->getFinishedAt()
         ]);
     }
+
+    public function delete(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required|numeric'
+        ]);
+
+        if(!$this->answerSheetRepository->find($request->id)){
+            return $this->respondNotFound('پاسخنامه یافت نشد');
+        }
+
+        if(!$this->answerSheetRepository->delete($request->id)){
+            return $this->respondInternalError('پاسخنامه حذف نشد');
+        }
+
+        return $this->respondSuccess('پاسخنامه حذف شد');
+    }
 }
