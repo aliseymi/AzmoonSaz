@@ -13,6 +13,57 @@ class CategoryController extends APIController
         
     }
 
+    /**
+     * @OA\Get(
+     *   description="Returns all categories",
+     *   tags={"categories"},
+     *   path="/api/v1/categories",
+     *   
+     *   @OA\Parameter(
+     *     name="search",
+     *     in="path",
+     *     description="By passing this parameter you can filter the result",
+     *     required=false,
+     *     @OA\Schema(type="string")
+     *   ),
+     *   
+     *   @OA\Parameter(
+     *     name="page",
+     *     in="path",
+     *     description="By passing this param you can get the result of the page",
+     *     required=true,
+     *     @OA\Schema(type="numeric")
+     *   ),
+     *   
+     *   @OA\Parameter(
+     *     name="pagesize",
+     *     in="path",
+     *     description="By passing this param you choose the size of the page",
+     *     required=false,
+     *     @OA\Schema(type="numeric")
+     *   ),
+     *   
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="success", type="boolean", example="true"),
+     *       
+     *       @OA\Property(property="message", type="string", example="دسته‌بندی‌ها"),
+     *       
+     *       @OA\Property(
+     *         property="data",
+     *         type="array",
+     *         @OA\Items(
+     *           @OA\Property(property="name", type="string", example="category 1"),
+     *           @OA\Property(property="slug", type="string", example="category-1"),
+     *         )
+     *       )
+     *     )
+     *   )
+     * )
+     */
+
     public function index(Request $request)
     {
         $this->validate($request, [
