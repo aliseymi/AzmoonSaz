@@ -76,4 +76,69 @@ class AnswerSheetsTest extends TestCase
             'data'
         ]);
     }
+
+    public function test_ensure_that_we_can_get_answer_sheets()
+    {
+        $this->createAnswerSheet(30);
+
+        $pagesize = 3;
+
+        $response = $this->call('GET', 'api/v1/answer-sheets', [
+            'page' => 1,
+            'pagesize' => $pagesize,
+        ]);
+
+        $responseData = json_decode($response->getContent(), true)['data'];
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        $this->assertCount($pagesize, $responseData);
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
+
+    public function test_ensure_that_we_can_get_filtered_answer_sheets()
+    {
+        $quiz = $this->createQuiz()[0];
+
+        $searchKey = '50';
+
+        $this->createAnswerSheet(30, [
+            'quiz_id' => $quiz->getId(),
+            'answers' => json_encode([
+                1 => 3,
+                2 => 1,
+                3 => 2,
+            ]),
+            'status' => AnswerSheetsStatus::PASSED,
+            'score' => $searchKey,
+            'finished_at' => Carbon::now()
+        ]);
+
+        $pagesize = 3;
+
+        $response = $this->call('GET', 'api/v1/answer-sheets', [
+            'page' => 1,
+            'pagesize' => $pagesize,
+            'search' => $searchKey
+        ]);
+
+        $responseData = json_decode($response->getContent(), true)['data'];
+
+        $this->assertEquals(200, $response->getStatusCode());
+
+        foreach ($responseData as $answerSheet) {
+            $this->assertEquals($searchKey, $answerSheet['score']);
+        }
+
+        $this->seeJsonStructure([
+            'success',
+            'message',
+            'data'
+        ]);
+    }
 }

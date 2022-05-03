@@ -14,6 +14,21 @@ class AnswerSheetController extends APIController
     {
     }
 
+    public function index(Request $request)
+    {
+        $this->validate($request, [
+            'page' => 'required|numeric',
+            'pagesize' => 'nullable|numeric',
+            'search' => 'nullable|string' 
+        ]);
+
+        $answerSheets = $this->answerSheetRepository->paginate($request->search, $request->page, $request->pagesize ?? 10, [
+            'quiz_id', 'answers', 'status', 'score', 'finished_at'
+        ]);
+
+        return $this->respondSuccess('آزمون ها', $answerSheets);
+    }
+
     public function store(Request $request)
     {
         $this->validate($request, [
