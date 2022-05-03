@@ -1,0 +1,85 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Azmoonsaz",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/categories": {
+            "get": {
+                "tags": [
+                    "categories"
+                ],
+                "description": "Returns all categories",
+                "operationId": "31e09b07cc70144d81afecfde9ee0671",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "path",
+                        "description": "By passing this parameter you can filter the result",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "path",
+                        "description": "By passing this param you can get the result of the page",
+                        "required": true,
+                        "schema": {
+                            "type": "numeric"
+                        }
+                    },
+                    {
+                        "name": "pagesize",
+                        "in": "path",
+                        "description": "By passing this param you choose the size of the page",
+                        "required": false,
+                        "schema": {
+                            "type": "numeric"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": "true"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "دسته‌بندی‌ها"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "category 1"
+                                                    },
+                                                    "slug": {
+                                                        "type": "string",
+                                                        "example": "category-1"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
